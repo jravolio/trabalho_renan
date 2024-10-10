@@ -1,48 +1,28 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import Menu from './components/Menu/Menu'
 import CreateDish from './components/CreateDish/CreateDish'
 import './App.css'
 
 function App() {
-  const [menuItems, setMenuItems] = useState([
-    {
-      nome: 'Filé Mignon',
-      valor: 'R$12',
-      description: 'Carne de luxo com cogumelos e molho barbecue'
-    },
-    {
-      nome: 'Filé Mignon',
-      valor: 'R$12',
-      description: 'Carne de luxo com cogumelos e molho barbecue'
-    },
-    {
-      nome: 'Filé Mignon',
-      valor: 'R$12',
-      description: 'Carne de luxo com cogumelos e molho barbecue'
-    },
-    {
-      nome: 'Filé Mignon',
-      valor: 'R$12',
-      description: 'Carne de luxo com cogumelos e molho barbecue'
-    },
-    {
-      nome: 'Salmão Grelhado',
-      valor: 'R$15',
-      description: 'Salmão fresco grelhado com ervas finas'
-    },
-    {
-      nome: 'Risoto de Funghi',
-      valor: 'R$10',
-      description: 'Risoto cremoso com mix de cogumelos'
-    }
-  ])
+  const [menuItems, setMenuItems] = useState([])
+
+  useEffect(() => {
+    axios.get('http://127.0.0.1:5000/api/menu', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => setMenuItems(response.data))
+      .catch(error => console.error('Error fetching menu:', error))
+  }, [])
 
   const addMenuItem = (newDish) => {
     setMenuItems([...menuItems, newDish])
   }
 
   const deleteMenuItem = (dish) => {
-    setMenuItems(menuItems.filter(item => item.nome !== dish.nome))
+    setMenuItems(menuItems.filter(item => item.name !== dish.name))
   }
 
   return (
@@ -51,11 +31,11 @@ function App() {
         <CreateDish onAddDish={addMenuItem} onDeleteDish={deleteMenuItem} />
       </div>
       <div className='menu-container'>
-        {menuItems.map((item, index) => (
+        {menuItems.map((item) => (
           <Menu
-            key={index}
-            nome={item.nome}
-            valor={item.valor}
+            key={item.id}
+            nome={item.name}
+            valor={item.price}
             description={item.description}
             onDelete={deleteMenuItem}
           />

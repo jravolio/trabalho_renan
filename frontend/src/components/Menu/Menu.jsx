@@ -17,7 +17,7 @@ export default function Menu({ nome, valor, description, onDelete }) {
                 x
             </button>
             <h2 className="menu-item__name">{nome}</h2>
-            <p className="menu-item__price">{valor}</p>
+            <p className="menu-item__price">R${valor}</p>
             <p className="menu-item__description">{description}</p>
         </div>
     );

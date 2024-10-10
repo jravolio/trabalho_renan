@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import './style.css';
 
 const CreateDish = ({ onAddDish }) => {
@@ -7,14 +8,23 @@ const CreateDish = ({ onAddDish }) => {
   const [description, setDescription] = useState('');
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newDish = { nome, valor: `R$${valor}`, description };
-    onAddDish(newDish);
-    setNome('');
-    setValor('');
-    setDescription('');
-    setIsOpen(false);
+    const newDish = { name: nome, price: parseFloat(valor), description };
+    try {
+      const response = await axios.post('http://127.0.0.1:5000/api/menu', newDish, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      onAddDish(response.data);
+      setNome('');
+      setValor('');
+      setDescription('');
+      setIsOpen(false);
+    } catch (error) {
+      console.error('Error adding dish:', error);
+    }
   };
 
   return (
@@ -33,9 +43,9 @@ const CreateDish = ({ onAddDish }) => {
             />
             <input
               type="text"
-              placeholder="Valor (ex: 10)"
+              placeholder="Valor (ex: 10.99)"
               value={valor}
-              onChange={(e) => setValor(e.target.value.replace(/[^0-9]/g, ''))}
+              onChange={(e) => setValor(e.target.value.replace(/[^0-9.]/g, ''))}
               required
             />
             <textarea
