@@ -22,7 +22,7 @@ function App() {
   }
 
   const deleteMenuItem = (dish) => {
-    setMenuItems(menuItems.filter(item => item.name !== dish.name))
+    setMenuItems(menuItems.filter(item => item.id !== dish.id))
   }
 
   return (
@@ -38,6 +38,7 @@ function App() {
             valor={item.price}
             description={item.description}
             onDelete={deleteMenuItem}
+            id={item.id}
           />
         ))}
       </div>

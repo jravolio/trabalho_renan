@@ -42,6 +42,11 @@ def create_dish():
     dishes.append(new_dish)
     return jsonify(new_dish), 201
 
+@app.route('/api/menu/<int:dish_id>', methods=['DELETE'])
+def delete_dish(dish_id):
+    global dishes
+    dishes = [dish for dish in dishes if dish['id'] != dish_id]
+    return '', 204
 
 if __name__ == '__main__':
     app.run(debug=True)
