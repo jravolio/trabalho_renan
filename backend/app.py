@@ -1,52 +1,45 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from pymongo import MongoClient
+from bson import ObjectId
 
 app = Flask(__name__)
 CORS(app)
 
-dishes = [
-    {
-        'id': 1,
-        'name': 'Filé Mignon',
-        'price': 1.99,
-        'description': 'Carne de luxo com cogumelos e molho barbecue'
-    },
-    {
-        'id': 2,
-        'name': 'Salmão Grelhado',
-        'price': 5.99,
-        'description': 'Salmão fresco grelhado com ervas finas'
-    },
-    {
-        'id': 3,
-        'name': 'Risoto de Funghi',
-        'price': 10.99,
-        'description': 'Risoto cremoso com mix de cogumelos'
-    }
-]
+# Connect to MongoDB
+client = MongoClient('mongodb://mongo:27017/')
+db = client['restaurant']
+dishes_collection = db['dishes']
 
 @app.route('/api/menu', methods=['GET'])
 def get_menu():
+    dishes = list(dishes_collection.find())
+    for dish in dishes:
+        dish['id'] = str(dish['_id'])
+        del dish['_id']
     return jsonify(dishes)
 
 @app.route('/api/menu', methods=['POST'])
 def create_dish():
     data = request.get_json()
-    print(data)
     new_dish = {
-        'id': len(dishes) + 1,
         'name': data['name'],
         'price': data['price'],
         'description': data['description']
     }
-    dishes.append(new_dish)
+    result = dishes_collection.insert_one(new_dish)
+    new_dish['id'] = str(result.inserted_id)
+    if '_id' in new_dish:
+        del new_dish['_id']
     return jsonify(new_dish), 201
 
-@app.route('/api/menu/<int:dish_id>', methods=['DELETE'])
+@app.route('/api/menu/<dish_id>', methods=['DELETE'])
 def delete_dish(dish_id):
-    global dishes
-    dishes = [dish for dish in dishes if dish['id'] != dish_id]
-    return '', 204
+    try:
+        dishes_collection.delete_one({'_id': ObjectId(dish_id)})
+        return '', 204
+    except:
+        return jsonify({'error': 'Invalid dish ID'}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)
