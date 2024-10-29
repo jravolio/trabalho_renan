@@ -12,7 +12,7 @@ const CreateDish = ({ onAddDish }) => {
     e.preventDefault();
     const newDish = { name: nome, price: parseFloat(valor), description };
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/menu', newDish, {
+      const response = await axios.post('http://127.0.0.1:5001/api/menu', newDish, {
         headers: {
           'Content-Type': 'application/json',
         },

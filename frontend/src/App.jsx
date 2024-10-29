@@ -8,7 +8,7 @@ function App() {
   const [menuItems, setMenuItems] = useState([])
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:5000/api/menu', {
+    axios.get('http://127.0.0.1:5001/api/menu', {
       headers: {
         'Content-Type': 'application/json',
       },

@@ -6,7 +6,7 @@ export default function Menu({ id, nome, valor, description, onDelete }) {
     const handleDelete = async () => {
         if (window.confirm("Do you really want to delete this dish?")) {
             try {
-                await axios.delete(`http://127.0.0.1:5000/api/menu/${id}`);
+                await axios.delete(`http://127.0.0.1:5001/api/menu/${id}`);
                 onDelete({ id, nome, valor, description });
             } catch (error) {
                 console.error('Error deleting dish:', error);
