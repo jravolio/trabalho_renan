@@ -40,3 +40,23 @@
     font-size: 1rem;
     font-weight: bold;
 }
+
+.menu-item__save-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.menu-item__edit-btn {
+    position: absolute;
+    top: 5px;
+    right: 30px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px;
+    line-height: 1;
+}
